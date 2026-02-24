@@ -167,13 +167,58 @@ export default function AddProblem() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // ---- client‑side sanity checks ------------------------------------------------
+        if (!form.title.trim()) {
+            alert("The problem title cannot be empty.");
+            return;
+        }
+
+        if (!form.slug.trim()) {
+            alert("Please provide a slug or a title so one may be auto‑generated.");
+            return;
+        }
+
+        if (!form.description.trim()) {
+            alert("Description is required.");
+            return;
+        }
+
         if (form.languages.length === 0) {
             alert("Please select at least one language.");
             return;
         }
 
+        const validateCases = (cases, name) => {
+            for (let i = 0; i < cases.length; i++) {
+                const { input, expectedOutput, score } = cases[i];
+                if (!input.trim() || !expectedOutput.trim()) {
+                    alert(
+                        `Please fill in both input and expected output for ${name} test case #${i + 1}.`
+                    );
+                    return false;
+                }
+                if (score < 0) {
+                    alert(`Score must be zero or greater for ${name} test case #${i + 1}.`);
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        if (!validateCases(form.publicTestCases, "public") || !validateCases(form.hiddenTestCases, "hidden")) {
+            return;
+        }
+
+        // compute the slug at submission time (handles the case where
+        // the title was edited right before hitting the button but slug
+        // generation was disabled/locked). this mirrors the same logic in
+        // `handleTitleChange`.
+        const slugVal = slugLocked ? form.slug : slugify(form.title);
+
+        // build payload; make sure tags become an array
         const payload = {
             ...form,
+            slug: slugVal,
             tags: form.tags
                 .split(",")
                 .map((t) => t.trim())
@@ -189,8 +234,12 @@ export default function AddProblem() {
             alert("Problem created successfully!");
             navigate("/dashboard");
         } catch (err) {
-            console.error("[AddProblem] Error:", err.response?.data);
-            alert(err.response?.data?.message || "Failed to create problem.");
+            console.error("[AddProblem] Error details:", err); // includes status/code
+            const msg =
+                err.response?.data?.message ||
+                err.response?.data ||
+                "Failed to create problem.";
+            alert(msg);
         } finally {
             setLoading(false);
         }
