@@ -18,3 +18,7 @@ export const getSubmissions = async (params) => {
 export const getCandidates = async () => {
   return api.get("/admin/candidates");
 };
+
+export const getStats = async (params) => {
+  return api.get("/admin/stats", { params });
+};

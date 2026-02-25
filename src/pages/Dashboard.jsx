@@ -1,7 +1,35 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getStats } from "../api/adminApi";
 
 export default function Dashboard() {
     const navigate = useNavigate();
+
+    const [stats, setStats] = useState({
+        totalCandidates: "—",
+        activeSessions: "—",
+        totalSubmissions: "—",
+        usersAttemptedCount: "—",
+    });
+
+    useEffect(() => {
+        async function loadStats() {
+            try {
+                const res = await getStats();
+                const d = res.data || {};
+                setStats({
+                    totalCandidates: d.totalCandidates ?? "—",
+                    activeSessions: d.activeSessions ?? "—",
+                    totalSubmissions: d.totalSubmissions ?? "—",
+                    usersAttemptedCount: d.usersAttemptedCount ?? "—",
+                });
+            } catch (err) {
+                console.error("failed to load stats", err);
+            }
+        }
+
+        loadStats();
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -48,23 +76,28 @@ export default function Dashboard() {
 
             {/* Stats Grid */}
             <div className="max-w-6xl mx-auto px-6 mb-10">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {[
-                        { label: "Total Candidates", value: "—", icon: "👤" },
-                        { label: "Active Sessions", value: "—", icon: "⚡" },
-                        { label: "Submissions", value: "—", icon: "📩" },
-                    ].map((stat) => (
-                        <div
-                            key={stat.label}
-                            className="bg-gray-900 border border-gray-800 rounded-xl p-5 flex items-center gap-4 hover:border-gray-700 transition-colors"
-                        >
-                            <span className="text-2xl">{stat.icon}</span>
-                            <div>
-                                <p className="text-2xl font-bold text-white">{stat.value}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">{stat.label}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    {(() => {
+                        const statsList = [
+                            { label: "Total Candidates", value: stats.totalCandidates, icon: "👤" },
+                            { label: "Active Sessions", value: stats.activeSessions, icon: "⚡" },
+                            { label: "Submissions", value: stats.totalSubmissions, icon: "📩" },
+                            { label: "Users Attempted", value: stats.usersAttemptedCount, icon: "✅" },
+                        ];
+
+                        return statsList.map((stat) => (
+                            <div
+                                key={stat.label}
+                                className="bg-gray-900 border border-gray-800 rounded-xl p-5 flex items-center gap-4 hover:border-gray-700 transition-colors"
+                            >
+                                <span className="text-2xl">{stat.icon}</span>
+                                <div>
+                                    <p className="text-2xl font-bold text-white">{stat.value}</p>
+                                    <p className="text-xs text-gray-500 mt-0.5">{stat.label}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ));
+                    })()}
                 </div>
             </div>
 
