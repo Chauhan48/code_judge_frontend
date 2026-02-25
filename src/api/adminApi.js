@@ -15,3 +15,6 @@ export const getProblems = async (params) => {
 export const getSubmissions = async (params) => {
   return api.get("/admin/submissions", { params });
 };
+export const getCandidates = async () => {
+  return api.get("/admin/candidates");
+};

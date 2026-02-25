@@ -28,6 +28,7 @@ If you are developing a production application, we recommend using TypeScript wi
 ### UI changes
 
 - Dashboard now includes a **View Progress** quick action card. Clicking it navigates to `/progress`.
-- The new **Progress** page allows admins to enter a public token and view the returned JSON response.
+- The new **Progress** page fetches a list of candidates via `GET /api/admin/candidates` when loaded. The emails are displayed as clickable links, and selecting one loads the corresponding progress by passing the candidate's token to `GET /api/test/progress`.
+- A manual token input field remains available for direct lookups.
 - `TestPage` no longer uses a hard‑coded email when fetching submission history; the email is read from the test metadata.
 
