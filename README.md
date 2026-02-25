@@ -14,3 +14,20 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+---
+
+## Application-specific notes
+
+### New API endpoints
+
+- `GET /api/admin/submissions` accepts query parameters `testId`, `problemId` and `email`.
+- `POST /api/test/run` expects a JSON body with `sourceCode`, `stdin`, `languageKey`, `problemId` and `token`.
+- `GET /api/test/progress?token=<token>` returns a candidate's progress (public look‑up by token).
+
+### UI changes
+
+- Dashboard now includes a **View Progress** quick action card. Clicking it navigates to `/progress`.
+- The new **Progress** page allows admins to enter a public token and view the returned JSON response.
+- `TestPage` no longer uses a hard‑coded email when fetching submission history; the email is read from the test metadata.
+

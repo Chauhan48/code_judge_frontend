@@ -4,6 +4,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import InviteCandidate from "./pages/InviteCandidate";
 import AddProblem from "./pages/AddProblem";
+import TestPage from "./pages/TestPage";
+import Progress from "./pages/Progress";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 
 function App() {
@@ -38,6 +40,19 @@ function App() {
           element={
             <ProtectedRoute>
               <AddProblem />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* test page for candidates; token passed via query string */}
+        <Route path="/test" element={<TestPage />} />
+
+        {/* admin view for candidate progress */}
+        <Route
+          path="/progress"
+          element={
+            <ProtectedRoute>
+              <Progress />
             </ProtectedRoute>
           }
         />

@@ -98,6 +98,20 @@ export default function Dashboard() {
                         <p className="text-sm text-gray-500">Create a new coding problem with test cases.</p>
                     </button>
 
+                    <button
+                        onClick={() => navigate("/progress")}
+                        className="group bg-gray-900 border border-gray-800 hover:border-yellow-500/50 rounded-xl p-6 text-left transition-all duration-200 hover:bg-gray-800/50"
+                    >
+                        <div className="w-10 h-10 rounded-lg bg-yellow-600/20 border border-yellow-500/20 flex items-center justify-center mb-4 group-hover:bg-yellow-600/30 transition-colors">
+                            <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3v18h18" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9h18M9 21V9" />
+                            </svg>
+                        </div>
+                        <h3 className="text-white font-semibold mb-1">View Progress</h3>
+                        <p className="text-sm text-gray-500">See a candidate's problem attempts via token.</p>
+                    </button>
+
                     <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 text-left opacity-50 cursor-not-allowed">
                         <div className="w-10 h-10 rounded-lg bg-gray-700/40 border border-gray-700 flex items-center justify-center mb-4">
                             <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
