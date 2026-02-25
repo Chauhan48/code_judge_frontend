@@ -15,10 +15,45 @@ export default function Progress() {
     const [progress, setProgress] = useState(null);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [resultFilter, setResultFilter] = useState("all");
+    const [scoreSort, setScoreSort] = useState("none");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
 
-    const filteredCandidates = candidates.filter((c) =>
-        c.email.toLowerCase().includes(searchTerm.toLowerCase())
+    // derive filtered+sorted candidates list
+    const filteredCandidates = candidates
+        .filter((c) => c.email.toLowerCase().includes(searchTerm.toLowerCase()))
+        .filter((c) => {
+            if (statusFilter === "all") return true;
+            return c.status === statusFilter;
+        })
+        .filter((c) => {
+            if (resultFilter === "all") return true;
+            if (resultFilter === "passed") return c.lastAttempt?.passed;
+            if (resultFilter === "failed") return c.lastAttempt && !c.lastAttempt.passed;
+            return true;
+        });
+
+    // sort separately so we don't mutate original
+    const sortedCandidates =
+        scoreSort === "none"
+            ? filteredCandidates
+            : [...filteredCandidates].sort((a, b) => {
+                const sa = a.lastAttempt?.score ?? 0;
+                const sb = b.lastAttempt?.score ?? 0;
+                return scoreSort === "asc" ? sa - sb : sb - sa;
+            });
+
+    // pagination slicing
+    const pageCount = Math.ceil(sortedCandidates.length / itemsPerPage);
+    const paginatedCandidates = sortedCandidates.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
     );
+
+    const handlePrev = () => setCurrentPage((p) => Math.max(1, p - 1));
+    const handleNext = () => setCurrentPage((p) => Math.min(pageCount, p + 1));
 
     const fetchProgress = async (t) => {
         setLoading(true);
@@ -126,62 +161,119 @@ export default function Progress() {
                             Candidates
                         </h2>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredCandidates.map((c) => (
-                                <div
-                                    key={c.id}
-                                    onClick={() => handleCandidateClick(c.token)}
-                                    className="cursor-pointer bg-gray-900 border border-gray-800 
-          rounded-2xl p-5 shadow-md hover:shadow-xl 
-          hover:-translate-y-1 transition-all duration-300 
-          hover:border-indigo-500"
+                        {/* filters */}
+                        <div className="flex flex-wrap gap-4 mb-4">
+                            <div>
+                                <label className="text-sm text-gray-400 block mb-1">
+                                    Invitation
+                                </label>
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
                                 >
-                                    {/* Email */}
-                                    <h3 className="text-lg font-semibold text-white truncate">
-                                        {c.email}
-                                    </h3>
+                                    <option value="all">All</option>
+                                    <option value="accepted">Accepted</option>
+                                    <option value="pending">Pending</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="text-sm text-gray-400 block mb-1">
+                                    Result
+                                </label>
+                                <select
+                                    value={resultFilter}
+                                    onChange={(e) => setResultFilter(e.target.value)}
+                                    className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
+                                >
+                                    <option value="all">All</option>
+                                    <option value="passed">Passed</option>
+                                    <option value="failed">Failed</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="text-sm text-gray-400 block mb-1">
+                                    Score sort
+                                </label>
+                                <select
+                                    value={scoreSort}
+                                    onChange={(e) => setScoreSort(e.target.value)}
+                                    className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
+                                >
+                                    <option value="none">None</option>
+                                    <option value="desc">Highest first</option>
+                                    <option value="asc">Lowest first</option>
+                                </select>
+                            </div>
+                        </div>
 
-                                    {/* Status */}
-                                    <div className="mt-3 flex items-center justify-between">
-                                        <span
-                                            className={`px-3 py-1 text-xs font-medium rounded-full
-              ${c.status === "accepted"
-                                                    ? "bg-green-500/20 text-green-400"
-                                                    : "bg-yellow-500/20 text-yellow-400"
-                                                }`}
+                        <div className="overflow-x-auto">
+                            <table className="w-full table-auto text-left">
+                                <thead>
+                                    <tr className="text-gray-400 border-b border-gray-700">
+                                        <th className="px-4 py-2">Email</th>
+                                        <th className="px-4 py-2">Status</th>
+                                        <th className="px-4 py-2">Attempts</th>
+                                        <th className="px-4 py-2">Last Score</th>
+                                        <th className="px-4 py-2">Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {paginatedCandidates.map((c) => (
+                                        <tr
+                                            key={c.id}
+                                            onClick={() => handleCandidateClick(c.token)}
+                                            className="cursor-pointer hover:bg-gray-800"
                                         >
-                                            {c.status}
-                                        </span>
-
-                                        <span className="text-sm text-gray-400">
-                                            Attempts:{" "}
-                                            <span className="text-indigo-400 font-semibold">
-                                                {c.attempts}
-                                            </span>
-                                        </span>
-                                    </div>
-
-                                    {/* Last Attempt */}
-                                    {c.lastAttempt && (
-                                        <div className="mt-4 text-sm">
-                                            <p className="text-gray-400">
-                                                Last Score:{" "}
-                                                <span className="text-white font-medium">
-                                                    {c.lastAttempt.score}
-                                                </span>
-                                            </p>
-                                            <p
-                                                className={`font-medium ${c.lastAttempt.passed
-                                                    ? "text-green-400"
-                                                    : "text-red-400"
+                                            <td className="px-4 py-3">{c.email}</td>
+                                            <td className="px-4 py-3 capitalize">
+                                                {c.status}
+                                            </td>
+                                            <td className="px-4 py-3">{c.attempts}</td>
+                                            <td className="px-4 py-3">
+                                                {c.lastAttempt?.score ?? "-"}
+                                            </td>
+                                            <td
+                                                className={`px-4 py-3 ${c.lastAttempt?.passed
+                                                        ? "text-green-400"
+                                                        : "text-red-400"
                                                     }`}
                                             >
-                                                {c.lastAttempt.passed ? "Passed" : "Failed"}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                                                {c.lastAttempt
+                                                    ? c.lastAttempt.passed
+                                                        ? "Passed"
+                                                        : "Failed"
+                                                    : "-"}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* pagination controls */}
+                        <div className="mt-4 flex items-center justify-between text-sm text-gray-400">
+                            <span>
+                                Showing {(currentPage - 1) * itemsPerPage + 1} -{' '}
+                                {Math.min(currentPage * itemsPerPage, sortedCandidates.length)} of{' '}
+                                {sortedCandidates.length}
+                            </span>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={handlePrev}
+                                    disabled={currentPage === 1}
+                                    className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 disabled:opacity-50"
+                                >
+                                    &larr; Prev
+                                </button>
+                                <button
+                                    onClick={handleNext}
+                                    disabled={currentPage === pageCount || pageCount === 0}
+                                    className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 disabled:opacity-50"
+                                >
+                                    Next &rarr;
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -190,70 +282,71 @@ export default function Progress() {
 
                 <br />
 
-                {loading && <p>Loading...</p>}
-                {error && <p className="text-red-400">{error}</p>}
+{ loading && <p>Loading...</p> }
+{ error && <p className="text-red-400">{error}</p> }
 
-                {progress && (
-                    <div className="space-y-6">
-                        {/* summary */}
-                        <div className="bg-gray-900 border border-gray-800 p-4 rounded">
-                            <h2 className="text-xl font-semibold mb-2">Test Info</h2>
-                            <p><span className="font-medium">Token:</span> {progress.testId}</p>
-                            <p><span className="font-medium">Email:</span> {progress.email}</p>
-                            <p><span className="font-medium">Attempted:</span> {progress.attempted ? "Yes" : "No"}</p>
-                        </div>
+{
+    progress && (
+        <div className="space-y-6">
+            {/* summary */}
+            <div className="bg-gray-900 border border-gray-800 p-4 rounded">
+                <h2 className="text-xl font-semibold mb-2">Test Info</h2>
+                <p><span className="font-medium">Token:</span> {progress.testId}</p>
+                <p><span className="font-medium">Email:</span> {progress.email}</p>
+                <p><span className="font-medium">Attempted:</span> {progress.attempted ? "Yes" : "No"}</p>
+            </div>
 
-                        {/* problems list */}
-                        <div className="space-y-4">
-                            {progress.problems && progress.problems.length > 0 ? (
-                                progress.problems.map((prob) => (
-                                    <div
-                                        key={prob.problemId}
-                                        className="bg-gray-900 border border-gray-800 p-4 rounded"
-                                    >
-                                        <h3 className="text-lg font-semibold mb-1">
-                                            {prob.title}
-                                        </h3>
-                                        <p>
-                                            <span className="font-medium">Problem ID:</span> {prob.problemId}
-                                        </p>
-                                        <p>
-                                            <span className="font-medium">Attempted:</span>{" "}
-                                            {prob.attempted ? "Yes" : "No"}
-                                        </p>
-                                        <p>
-                                            <span className="font-medium">Attempts:</span> {prob.attempts}
-                                        </p>
+            {/* problems list */}
+            <div className="space-y-4">
+                {progress.problems && progress.problems.length > 0 ? (
+                    progress.problems.map((prob) => (
+                        <div
+                            key={prob.problemId}
+                            className="bg-gray-900 border border-gray-800 p-4 rounded"
+                        >
+                            <h3 className="text-lg font-semibold mb-1">
+                                {prob.title}
+                            </h3>
+                            <p>
+                                <span className="font-medium">Problem ID:</span> {prob.problemId}
+                            </p>
+                            <p>
+                                <span className="font-medium">Attempted:</span>{" "}
+                                {prob.attempted ? "Yes" : "No"}
+                            </p>
+                            <p>
+                                <span className="font-medium">Attempts:</span> {prob.attempts}
+                            </p>
 
-                                        {prob.lastAttempt && (
-                                            <div className="mt-3 bg-gray-800 p-3 rounded">
-                                                <h4 className="font-semibold">Last Attempt</h4>
-                                                <p>
-                                                    <span className="font-medium">Status:</span> {prob.lastAttempt.status}
-                                                </p>
-                                                <p>
-                                                    <span className="font-medium">Score:</span> {prob.lastAttempt.score}
-                                                </p>
-                                                <p>
-                                                    <span className="font-medium">Passed:</span> {prob.lastAttempt.passed ? "Yes" : "No"}
-                                                </p>
-                                                <p>
-                                                    <span className="font-medium">Output:</span> {prob.lastAttempt.output}
-                                                </p>
-                                                <p>
-                                                    <span className="font-medium">Submitted:</span>{" "}
-                                                    {new Date(prob.lastAttempt.createdAt).toLocaleString()}
-                                                </p>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="text-sm text-gray-400">No problems in this test.</p>
+                            {prob.lastAttempt && (
+                                <div className="mt-3 bg-gray-800 p-3 rounded">
+                                    <h4 className="font-semibold">Last Attempt</h4>
+                                    <p>
+                                        <span className="font-medium">Status:</span> {prob.lastAttempt.status}
+                                    </p>
+                                    <p>
+                                        <span className="font-medium">Score:</span> {prob.lastAttempt.score}
+                                    </p>
+                                    <p>
+                                        <span className="font-medium">Passed:</span> {prob.lastAttempt.passed ? "Yes" : "No"}
+                                    </p>
+                                    <p>
+                                        <span className="font-medium">Output:</span> {prob.lastAttempt.output}
+                                    </p>
+                                    <p>
+                                        <span className="font-medium">Submitted:</span>{" "}
+                                        {new Date(prob.lastAttempt.createdAt).toLocaleString()}
+                                    </p>
+                                </div>
                             )}
                         </div>
-                    </div>
+                    ))
+                ) : (
+                    <p className="text-sm text-gray-400">No problems in this test.</p>
                 )}
+            </div>
+        </div>
+    )}
             </div>
         </div>
     );
