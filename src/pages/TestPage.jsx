@@ -17,11 +17,12 @@ export default function TestPage() {
   const [email, setEmail] = useState("");
   const [runOutput, setRunOutput] = useState(null);
   const [submissionHistory, setSubmissionHistory] = useState([]);
+  const [testExpired, setTestExpired] = useState(false);
 
   const [timeLeft, setTimeLeft] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [message, setMessage] = useState("");
-  
+
   const handleFinish = () => {
     setIsFinished(true);
     setMessage("Test submitted successfully");
@@ -65,6 +66,16 @@ export default function TestPage() {
 
       } catch (err) {
         console.error("failed to load test", err);
+
+        const errorMessage =
+          err.response?.data?.message || "Failed to load test";
+
+        if (errorMessage === "Invalid or expired test link") {
+          setTestExpired(true);
+          setMessage("This test has already been attempted.");
+        } else {
+          setMessage(errorMessage);
+        }
       }
     }
 
@@ -116,6 +127,22 @@ export default function TestPage() {
     );
   }
 
+  if (testExpired) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-950 text-gray-100">
+        <div className="bg-gray-900 border border-gray-800 p-8 rounded-2xl shadow-xl text-center max-w-md">
+          <div className="text-red-500 text-4xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-semibold mb-2">
+            Test Already Attempted
+          </h2>
+          <p className="text-gray-400">
+            This test link has expired or has already been used.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-950 text-gray-100">
 
@@ -133,8 +160,8 @@ export default function TestPage() {
             key={p._id}
             onClick={() => !isFinished && setSelectedIndex(index)}
             className={`p-2 mb-2 rounded cursor-pointer transition ${selectedIndex === index
-                ? "bg-indigo-600"
-                : "bg-gray-800 hover:bg-gray-700"
+              ? "bg-indigo-600"
+              : "bg-gray-800 hover:bg-gray-700"
               } ${isFinished && "opacity-50 cursor-not-allowed"}`}
           >
             {index + 1}. {p.title}
@@ -153,8 +180,8 @@ export default function TestPage() {
             Time Left:{" "}
             <span
               className={`${timeLeft <= 300
-                  ? "text-red-500 animate-pulse"
-                  : "text-green-400"
+                ? "text-red-500 animate-pulse"
+                : "text-green-400"
                 }`}
             >
               {formatTime(timeLeft)}
@@ -166,8 +193,8 @@ export default function TestPage() {
             onClick={handleFinish}
             disabled={isFinished}
             className={`px-5 py-2 rounded-lg font-medium transition-all duration-300 ${isFinished
-                ? "bg-gray-700 cursor-not-allowed"
-                : "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-md hover:shadow-lg"
+              ? "bg-gray-700 cursor-not-allowed"
+              : "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-md hover:shadow-lg"
               }`}
           >
             Finish Test
@@ -239,8 +266,8 @@ export default function TestPage() {
               onClick={handleSubmit}
               disabled={isFinished}
               className={`mt-4 px-6 py-2 rounded text-white transition ${isFinished
-                  ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-indigo-600 hover:bg-indigo-700"
+                ? "bg-gray-600 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
                 }`}
             >
               Submit
