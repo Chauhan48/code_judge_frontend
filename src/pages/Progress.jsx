@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getProgress } from "../api/testApi";
 import { getCandidates } from "../api/adminApi";
+import CandidateAttemptsChart from "../components/CandidateAttemptsChart";
 
 export default function Progress() {
     const { search } = useLocation();
@@ -13,6 +14,11 @@ export default function Progress() {
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(null);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const filteredCandidates = candidates.filter((c) =>
+        c.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const fetchProgress = async (t) => {
         setLoading(true);
@@ -81,98 +87,174 @@ export default function Progress() {
             </nav>
             <div className="max-w-5xl mx-auto px-6 pt-12 pb-6">
 
-            <h1 className="text-3xl font-bold mb-4">Candidate Progress</h1>
+                <h1 className="text-3xl font-bold mb-4">Candidate Progress</h1>
 
-            {/* candidate list */}
-            {candidates.length > 0 && (
+                {/* Search Input */}
                 <div className="mb-6">
-                    <h2 className="text-xl font-semibold mb-2">Candidates</h2>
-                    <ul className="space-y-1">
-                        {candidates.map((c) => (
-                            <li key={c.id}>
-                                <button
-                                    className="inline-flex items-center px-5 py-2.5 rounded-lg 
-bg-gradient-to-r from-indigo-500 to-purple-600 
-text-white font-medium text-sm 
-shadow-md hover:shadow-lg 
-hover:from-indigo-600 hover:to-purple-700 
-transition-all duration-300 ease-in-out 
-focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
-                                    onClick={() => handleCandidateClick(c.token)}
-                                >
-                                    {c.email}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+                    <div className="relative max-w-md">
+                        <input
+                            type="text"
+                            placeholder="Search by email..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full bg-gray-900 border border-gray-800 
+      text-white rounded-xl px-4 py-3 pl-11
+      focus:outline-none focus:ring-2 focus:ring-indigo-500
+      focus:border-indigo-500 transition-all duration-200"
+                        />
 
-            {loading && <p>Loading...</p>}
-            {error && <p className="text-red-400">{error}</p>}
-
-            {progress && (
-                <div className="space-y-6">
-                    {/* summary */}
-                    <div className="bg-gray-900 border border-gray-800 p-4 rounded">
-                        <h2 className="text-xl font-semibold mb-2">Test Info</h2>
-                        <p><span className="font-medium">Token:</span> {progress.testId}</p>
-                        <p><span className="font-medium">Email:</span> {progress.email}</p>
-                        <p><span className="font-medium">Attempted:</span> {progress.attempted ? "Yes" : "No"}</p>
+                        <svg
+                            className="w-5 h-5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
+                            />
+                        </svg>
                     </div>
+                </div>
 
-                    {/* problems list */}
-                    <div className="space-y-4">
-                        {progress.problems && progress.problems.length > 0 ? (
-                            progress.problems.map((prob) => (
+                {/* candidate list */}
+                {candidates.length > 0 && (
+                    <div className="mb-10">
+                        <h2 className="text-2xl font-semibold text-white mb-6">
+                            Candidates
+                        </h2>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredCandidates.map((c) => (
                                 <div
-                                    key={prob.problemId}
-                                    className="bg-gray-900 border border-gray-800 p-4 rounded"
+                                    key={c.id}
+                                    onClick={() => handleCandidateClick(c.token)}
+                                    className="cursor-pointer bg-gray-900 border border-gray-800 
+          rounded-2xl p-5 shadow-md hover:shadow-xl 
+          hover:-translate-y-1 transition-all duration-300 
+          hover:border-indigo-500"
                                 >
-                                    <h3 className="text-lg font-semibold mb-1">
-                                        {prob.title}
+                                    {/* Email */}
+                                    <h3 className="text-lg font-semibold text-white truncate">
+                                        {c.email}
                                     </h3>
-                                    <p>
-                                        <span className="font-medium">Problem ID:</span> {prob.problemId}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">Attempted:</span>{" "}
-                                        {prob.attempted ? "Yes" : "No"}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">Attempts:</span> {prob.attempts}
-                                    </p>
 
-                                    {prob.lastAttempt && (
-                                        <div className="mt-3 bg-gray-800 p-3 rounded">
-                                            <h4 className="font-semibold">Last Attempt</h4>
-                                            <p>
-                                                <span className="font-medium">Status:</span> {prob.lastAttempt.status}
+                                    {/* Status */}
+                                    <div className="mt-3 flex items-center justify-between">
+                                        <span
+                                            className={`px-3 py-1 text-xs font-medium rounded-full
+              ${c.status === "accepted"
+                                                    ? "bg-green-500/20 text-green-400"
+                                                    : "bg-yellow-500/20 text-yellow-400"
+                                                }`}
+                                        >
+                                            {c.status}
+                                        </span>
+
+                                        <span className="text-sm text-gray-400">
+                                            Attempts:{" "}
+                                            <span className="text-indigo-400 font-semibold">
+                                                {c.attempts}
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                    {/* Last Attempt */}
+                                    {c.lastAttempt && (
+                                        <div className="mt-4 text-sm">
+                                            <p className="text-gray-400">
+                                                Last Score:{" "}
+                                                <span className="text-white font-medium">
+                                                    {c.lastAttempt.score}
+                                                </span>
                                             </p>
-                                            <p>
-                                                <span className="font-medium">Score:</span> {prob.lastAttempt.score}
-                                            </p>
-                                            <p>
-                                                <span className="font-medium">Passed:</span> {prob.lastAttempt.passed ? "Yes" : "No"}
-                                            </p>
-                                            <p>
-                                                <span className="font-medium">Output:</span> {prob.lastAttempt.output}
-                                            </p>
-                                            <p>
-                                                <span className="font-medium">Submitted:</span>{" "}
-                                                {new Date(prob.lastAttempt.createdAt).toLocaleString()}
+                                            <p
+                                                className={`font-medium ${c.lastAttempt.passed
+                                                    ? "text-green-400"
+                                                    : "text-red-400"
+                                                    }`}
+                                            >
+                                                {c.lastAttempt.passed ? "Passed" : "Failed"}
                                             </p>
                                         </div>
                                     )}
                                 </div>
-                            ))
-                        ) : (
-                            <p className="text-sm text-gray-400">No problems in this test.</p>
-                        )}
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+
+                <CandidateAttemptsChart candidates={candidates} />
+
+                <br />
+
+                {loading && <p>Loading...</p>}
+                {error && <p className="text-red-400">{error}</p>}
+
+                {progress && (
+                    <div className="space-y-6">
+                        {/* summary */}
+                        <div className="bg-gray-900 border border-gray-800 p-4 rounded">
+                            <h2 className="text-xl font-semibold mb-2">Test Info</h2>
+                            <p><span className="font-medium">Token:</span> {progress.testId}</p>
+                            <p><span className="font-medium">Email:</span> {progress.email}</p>
+                            <p><span className="font-medium">Attempted:</span> {progress.attempted ? "Yes" : "No"}</p>
+                        </div>
+
+                        {/* problems list */}
+                        <div className="space-y-4">
+                            {progress.problems && progress.problems.length > 0 ? (
+                                progress.problems.map((prob) => (
+                                    <div
+                                        key={prob.problemId}
+                                        className="bg-gray-900 border border-gray-800 p-4 rounded"
+                                    >
+                                        <h3 className="text-lg font-semibold mb-1">
+                                            {prob.title}
+                                        </h3>
+                                        <p>
+                                            <span className="font-medium">Problem ID:</span> {prob.problemId}
+                                        </p>
+                                        <p>
+                                            <span className="font-medium">Attempted:</span>{" "}
+                                            {prob.attempted ? "Yes" : "No"}
+                                        </p>
+                                        <p>
+                                            <span className="font-medium">Attempts:</span> {prob.attempts}
+                                        </p>
+
+                                        {prob.lastAttempt && (
+                                            <div className="mt-3 bg-gray-800 p-3 rounded">
+                                                <h4 className="font-semibold">Last Attempt</h4>
+                                                <p>
+                                                    <span className="font-medium">Status:</span> {prob.lastAttempt.status}
+                                                </p>
+                                                <p>
+                                                    <span className="font-medium">Score:</span> {prob.lastAttempt.score}
+                                                </p>
+                                                <p>
+                                                    <span className="font-medium">Passed:</span> {prob.lastAttempt.passed ? "Yes" : "No"}
+                                                </p>
+                                                <p>
+                                                    <span className="font-medium">Output:</span> {prob.lastAttempt.output}
+                                                </p>
+                                                <p>
+                                                    <span className="font-medium">Submitted:</span>{" "}
+                                                    {new Date(prob.lastAttempt.createdAt).toLocaleString()}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-sm text-gray-400">No problems in this test.</p>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
