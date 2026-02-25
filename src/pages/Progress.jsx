@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getProgress } from "../api/testApi";
 import { getCandidates } from "../api/adminApi";
 
@@ -47,18 +47,40 @@ export default function Progress() {
         }
     }, [initialToken]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (token) fetchProgress(token);
-    };
-
     const handleCandidateClick = (candidateToken) => {
         setToken(candidateToken);
         fetchProgress(candidateToken);
     };
 
+    const navigate = useNavigate();
+
     return (
-        <div className="min-h-screen bg-gray-950 text-gray-100 p-6">
+        <div className="min-h-screen bg-gray-950 text-gray-100">
+            <nav className="border-b border-gray-800 bg-gray-900/60 backdrop-blur-sm sticky top-0 z-20">
+                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
+                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <span className="text-base font-bold tracking-tight">CodeJudge</span>
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate("/dashboard")}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 border border-transparent hover:border-gray-700 transition-all duration-200"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Back
+                    </button>
+                </div>
+            </nav>
+            <div className="max-w-5xl mx-auto px-6 pt-12 pb-6">
+
             <h1 className="text-3xl font-bold mb-4">Candidate Progress</h1>
 
             {/* candidate list */}
@@ -85,23 +107,6 @@ focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
                     </ul>
                 </div>
             )}
-
-            <form onSubmit={handleSubmit} className="mb-6">
-                <label className="block mb-1">Public Token</label>
-                <input
-                    type="text"
-                    value={token}
-                    onChange={(e) => setToken(e.target.value)}
-                    className="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded"
-                    placeholder="e.g. 65asd87asd8"
-                />
-                <button
-                    type="submit"
-                    className="mt-3 bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500"
-                >
-                    Load Progress
-                </button>
-            </form>
 
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-400">{error}</p>}
@@ -167,6 +172,7 @@ focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 }

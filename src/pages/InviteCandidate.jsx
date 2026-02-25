@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { inviteCandidate, getProblems } from "../api/adminApi";
+import { useNavigate } from "react-router-dom";
 
 export default function InviteCandidate() {
   const [email, setEmail] = useState("");
@@ -88,9 +89,33 @@ export default function InviteCandidate() {
     }
   };
 
+  const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 px-6 py-10">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gray-950 text-gray-100">
+            <nav className="border-b border-gray-800 bg-gray-900/60 backdrop-blur-sm sticky top-0 z-20">
+                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
+                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <span className="text-base font-bold tracking-tight">CodeJudge</span>
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate("/dashboard")}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 border border-transparent hover:border-gray-700 transition-all duration-200"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Back
+                    </button>
+                </div>
+            </nav>
+            <div className="max-w-5xl mx-auto px-6 pt-12 pb-6">
 
         {/* Header */}
         <h1 className="text-3xl font-bold mb-8">
