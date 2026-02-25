@@ -16,6 +16,7 @@ export default function TestPage() {
   const [testId, setTestId] = useState("");
   const [email, setEmail] = useState("");
   const [runOutput, setRunOutput] = useState(null);
+  const [isRunning, setIsRunning] = useState(false); // show running animation
   const [submissionHistory, setSubmissionHistory] = useState([]);
   const [testExpired, setTestExpired] = useState(false);
 
@@ -96,8 +97,11 @@ export default function TestPage() {
 
   const handleSubmit = async () => {
     if (!selectedProblem) return;
+    setIsRunning(true);
+    setRunOutput(null);
+
     try {
-      // run code endpoint
+      // run code endpoint (will perform test-case grading)
       const runRes = await runCode({
         sourceCode: code,
         stdin: "",
@@ -116,6 +120,8 @@ export default function TestPage() {
       setSubmissionHistory(subRes.data || []);
     } catch (err) {
       console.error("submission error", err);
+    } finally {
+      setIsRunning(false);
     }
   };
 
@@ -264,22 +270,93 @@ export default function TestPage() {
             {/* SUBMIT BUTTON */}
             <button
               onClick={handleSubmit}
-              disabled={isFinished}
-              className={`mt-4 px-6 py-2 rounded text-white transition ${isFinished
-                ? "bg-gray-600 cursor-not-allowed"
-                : "bg-indigo-600 hover:bg-indigo-700"
-                }`}
+              disabled={isFinished || isRunning}
+              className={`mt-4 px-6 py-2 rounded text-white transition ${
+                isFinished || isRunning
+                  ? "bg-gray-600 cursor-not-allowed"
+                  : "bg-indigo-600 hover:bg-indigo-700"
+              }`}
             >
-              Submit
+              {isRunning ? (
+                <span className="flex items-center">
+                  <svg
+                    className="animate-spin h-5 w-5 mr-2 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                  Running...
+                </span>
+              ) : (
+                'Submit'
+              )}
             </button>
 
             {/* RUN OUTPUT */}
             {runOutput && (
               <div className="bg-gray-800 p-4 rounded mt-4">
                 <h3 className="font-semibold mb-2">Run Result</h3>
-                <pre className="text-sm">
-                  {JSON.stringify(runOutput, null, 2)}
-                </pre>
+
+                {runOutput.results ? (
+                  // graded response
+                  <div className="text-sm">
+                    <div>
+                      Status: <strong>{runOutput.status}</strong>
+                    </div>
+                    <div>
+                      Score: <strong>
+                        {runOutput.score} / {runOutput.maxScore}
+                      </strong>
+                    </div>
+                    <div className="mt-2">
+                      {runOutput.results.map((r) => (
+                        <div
+                          key={r.index}
+                          className={`mb-2 p-2 rounded ${
+                            r.passed ? 'bg-green-700' : 'bg-red-700'
+                          }`}
+                        >
+                          <div>Test #{r.index}: {r.status}</div>
+                          {r.stdout != null && (
+                            <div className="text-xs">
+                              <strong>Output:</strong> {r.stdout}
+                            </div>
+                          )}
+                          {r.stderr && (
+                            <div className="text-xs text-yellow-300">
+                              <strong>StdErr:</strong> {r.stderr}
+                            </div>
+                          )}
+                          {r.compileOutput && (
+                            <div className="text-xs text-yellow-300">
+                              <strong>Compiler:</strong>{' '}
+                              {r.compileOutput}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  // plain JDoodle response
+                  <pre className="text-sm">
+                    {JSON.stringify(runOutput, null, 2)}
+                  </pre>
+                )}
               </div>
             )}
           </>

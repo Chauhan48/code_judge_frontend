@@ -157,7 +157,7 @@ export default function InviteCandidate() {
             </select>
 
             {/* Tag Input */}
-            <div className="flex gap-2">
+            <div className="flex gap-1">
               <input
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
@@ -174,7 +174,7 @@ export default function InviteCandidate() {
 
             <button
               onClick={fetchProblems}
-              className="bg-indigo-600 hover:bg-indigo-700 rounded-lg px-4 py-2"
+              className="bg-indigo-600 hover:bg-indigo-700 rounded-lg px-2 py-1 mx-4"
             >
               Apply Filters
             </button>
