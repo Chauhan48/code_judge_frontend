@@ -27,6 +27,9 @@ export default function Login() {
       }
 
       localStorage.setItem("token", token);
+      if (res.data.user?.name) {
+        localStorage.setItem("adminName", res.data.user.name);
+      }
       console.log("[Login] Token stored successfully.");
       navigate("/dashboard");
     } catch (err) {

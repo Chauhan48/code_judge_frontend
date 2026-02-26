@@ -22,3 +22,16 @@ export const getCandidates = async () => {
 export const getStats = async (params) => {
   return api.get("/admin/stats", { params });
 };
+
+// actual dashboard features
+export const getRecentActivity = async () => {
+  return api.get("/admin/recent-activity");
+};
+
+export const getActiveSessions = async () => {
+  return api.get("/admin/active-sessions");
+};
+
+export const getSubmissionsOverTime = async () => {
+  return api.get("/admin/submissions-time");
+};
