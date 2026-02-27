@@ -4,6 +4,14 @@ export const inviteCandidate = async (data) => {
   return api.post("/admin/invite", data);
 };
 
+export const bulkInviteCandidates = async (data) => {
+  return api.post("/admin/bulk-invite", data);
+};
+
+export const getBulkInviteStatus = async (jobId) => {
+  return api.get(`/admin/bulk-invite/${jobId}`);
+};
+
 export const addProblem = async (data) => {
   return api.post("/admin/problems", data);
 };
