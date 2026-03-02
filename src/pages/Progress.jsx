@@ -100,205 +100,180 @@ export default function Progress() {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
-        <div className="min-h-screen bg-gray-950 text-gray-100">
-            <nav className="border-b border-gray-800 bg-gray-900/60 backdrop-blur-sm sticky top-0 z-20">
-                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
-                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <span className="text-base font-bold tracking-tight">CodeJudge</span>
-                    </div>
+        <div className="max-w-5xl mx-auto px-6 pt-12 pb-6">
 
-                    <button
-                        type="button"
-                        onClick={() => navigate("/dashboard")}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 border border-transparent hover:border-gray-700 transition-all duration-200"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        Back
-                    </button>
-                </div>
-            </nav>
-            <div className="max-w-5xl mx-auto px-6 pt-12 pb-6">
+            <h1 className="text-3xl font-bold mb-4">Candidate Progress</h1>
 
-                <h1 className="text-3xl font-bold mb-4">Candidate Progress</h1>
-
-                {/* Search Input */}
-                <div className="mb-6">
-                    <div className="relative max-w-md">
-                        <input
-                            type="text"
-                            placeholder="Search by email..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-gray-900 border border-gray-800 
+            {/* Search Input */}
+            <div className="mb-6">
+                <div className="relative max-w-md">
+                    <input
+                        type="text"
+                        placeholder="Search by email..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full bg-gray-900 border border-gray-800 
       text-white rounded-xl px-4 py-3 pl-11
       focus:outline-none focus:ring-2 focus:ring-indigo-500
       focus:border-indigo-500 transition-all duration-200"
-                        />
+                    />
 
-                        <svg
-                            className="w-5 h-5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
-                            />
-                        </svg>
+                    <svg
+                        className="w-5 h-5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                    </svg>
+                </div>
+            </div>
+
+            {/* candidate list */}
+            {candidates.length > 0 && (
+                <div className="mb-10">
+                    <h2 className="text-2xl font-semibold text-white mb-6">
+                        Candidates
+                    </h2>
+
+                    {/* filters */}
+                    <div className="flex flex-wrap gap-4 mb-4">
+                        <div>
+                            <label className="text-sm text-gray-400 block mb-1">
+                                Invitation
+                            </label>
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
+                            >
+                                <option value="all">All</option>
+                                <option value="accepted">Accepted</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-sm text-gray-400 block mb-1">
+                                Result
+                            </label>
+                            <select
+                                value={resultFilter}
+                                onChange={(e) => setResultFilter(e.target.value)}
+                                className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
+                            >
+                                <option value="all">All</option>
+                                <option value="passed">Passed</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-sm text-gray-400 block mb-1">
+                                Score sort
+                            </label>
+                            <select
+                                value={scoreSort}
+                                onChange={(e) => setScoreSort(e.target.value)}
+                                className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
+                            >
+                                <option value="none">None</option>
+                                <option value="desc">Highest first</option>
+                                <option value="asc">Lowest first</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                        <table className="w-full table-auto text-left">
+                            <thead>
+                                <tr className="text-gray-400 border-b border-gray-700">
+                                    <th className="px-4 py-2">Email</th>
+                                    <th className="px-4 py-2">Status</th>
+                                    <th className="px-4 py-2">Attempts</th>
+                                    <th className="px-4 py-2">Last Score</th>
+                                    <th className="px-4 py-2">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {paginatedCandidates.map((c) => (
+                                    <tr
+                                        key={c.id}
+                                        onClick={() => handleCandidateClick(c.token)}
+                                        className="cursor-pointer hover:bg-gray-800"
+                                    >
+                                        <td className="px-4 py-3">{c.email}</td>
+                                        <td className="px-4 py-3 capitalize">
+                                            {c.status}
+                                        </td>
+                                        <td className="px-4 py-3">{c.attempts}</td>
+                                        <td className="px-4 py-3">
+                                            {c.lastAttempt?.score ?? "-"}
+                                        </td>
+                                        <td
+                                            className={`px-4 py-3 ${c.lastAttempt?.passed
+                                                ? "text-green-400"
+                                                : "text-red-400"
+                                                }`}
+                                        >
+                                            {c.lastAttempt
+                                                ? c.lastAttempt.passed
+                                                    ? "Passed"
+                                                    : "Failed"
+                                                : "-"}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* pagination controls */}
+                    <div className="mt-4 flex items-center justify-between text-sm text-gray-400">
+                        <span>
+                            Showing {(currentPage - 1) * itemsPerPage + 1} -{' '}
+                            {Math.min(currentPage * itemsPerPage, sortedCandidates.length)} of{' '}
+                            {sortedCandidates.length}
+                        </span>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={handlePrev}
+                                disabled={currentPage === 1}
+                                className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 disabled:opacity-50"
+                            >
+                                &larr; Prev
+                            </button>
+                            <button
+                                onClick={handleNext}
+                                disabled={currentPage === pageCount || pageCount === 0}
+                                className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 disabled:opacity-50"
+                            >
+                                Next &rarr;
+                            </button>
+                        </div>
                     </div>
                 </div>
+            )}
 
-                {/* candidate list */}
-                {candidates.length > 0 && (
-                    <div className="mb-10">
-                        <h2 className="text-2xl font-semibold text-white mb-6">
-                            Candidates
-                        </h2>
+            <CandidateAttemptsChart candidates={candidates} />
 
-                        {/* filters */}
-                        <div className="flex flex-wrap gap-4 mb-4">
-                            <div>
-                                <label className="text-sm text-gray-400 block mb-1">
-                                    Invitation
-                                </label>
-                                <select
-                                    value={statusFilter}
-                                    onChange={(e) => setStatusFilter(e.target.value)}
-                                    className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
-                                >
-                                    <option value="all">All</option>
-                                    <option value="accepted">Accepted</option>
-                                    <option value="pending">Pending</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="text-sm text-gray-400 block mb-1">
-                                    Result
-                                </label>
-                                <select
-                                    value={resultFilter}
-                                    onChange={(e) => setResultFilter(e.target.value)}
-                                    className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
-                                >
-                                    <option value="all">All</option>
-                                    <option value="passed">Passed</option>
-                                    <option value="failed">Failed</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="text-sm text-gray-400 block mb-1">
-                                    Score sort
-                                </label>
-                                <select
-                                    value={scoreSort}
-                                    onChange={(e) => setScoreSort(e.target.value)}
-                                    className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
-                                >
-                                    <option value="none">None</option>
-                                    <option value="desc">Highest first</option>
-                                    <option value="asc">Lowest first</option>
-                                </select>
-                            </div>
-                        </div>
+            <br />
 
-                        <div className="overflow-x-auto">
-                            <table className="w-full table-auto text-left">
-                                <thead>
-                                    <tr className="text-gray-400 border-b border-gray-700">
-                                        <th className="px-4 py-2">Email</th>
-                                        <th className="px-4 py-2">Status</th>
-                                        <th className="px-4 py-2">Attempts</th>
-                                        <th className="px-4 py-2">Last Score</th>
-                                        <th className="px-4 py-2">Result</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {paginatedCandidates.map((c) => (
-                                        <tr
-                                            key={c.id}
-                                            onClick={() => handleCandidateClick(c.token)}
-                                            className="cursor-pointer hover:bg-gray-800"
-                                        >
-                                            <td className="px-4 py-3">{c.email}</td>
-                                            <td className="px-4 py-3 capitalize">
-                                                {c.status}
-                                            </td>
-                                            <td className="px-4 py-3">{c.attempts}</td>
-                                            <td className="px-4 py-3">
-                                                {c.lastAttempt?.score ?? "-"}
-                                            </td>
-                                            <td
-                                                className={`px-4 py-3 ${c.lastAttempt?.passed
-                                                        ? "text-green-400"
-                                                        : "text-red-400"
-                                                    }`}
-                                            >
-                                                {c.lastAttempt
-                                                    ? c.lastAttempt.passed
-                                                        ? "Passed"
-                                                        : "Failed"
-                                                    : "-"}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {/* pagination controls */}
-                        <div className="mt-4 flex items-center justify-between text-sm text-gray-400">
-                            <span>
-                                Showing {(currentPage - 1) * itemsPerPage + 1} -{' '}
-                                {Math.min(currentPage * itemsPerPage, sortedCandidates.length)} of{' '}
-                                {sortedCandidates.length}
-                            </span>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={handlePrev}
-                                    disabled={currentPage === 1}
-                                    className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 disabled:opacity-50"
-                                >
-                                    &larr; Prev
-                                </button>
-                                <button
-                                    onClick={handleNext}
-                                    disabled={currentPage === pageCount || pageCount === 0}
-                                    className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 disabled:opacity-50"
-                                >
-                                    Next &rarr;
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                <CandidateAttemptsChart candidates={candidates} />
-
-                <br />
-
-{ loading && <p>Loading...</p> }
-{ error && <p className="text-red-400">{error}</p> }
+            {loading && <p>Loading...</p>}
+            {error && <p className="text-red-400">{error}</p>}
 
 
-{/* render modal only when open */}
-{isModalOpen && (
-    <TestInfoModal
-        progress={progress}
-        onClose={() => setIsModalOpen(false)}
-    />
-)}
+            {/* render modal only when open */}
+            {isModalOpen && (
+                <TestInfoModal
+                    progress={progress}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            )}
 
-            </div>
         </div>
     );
 }

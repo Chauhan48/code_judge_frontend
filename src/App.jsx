@@ -7,6 +7,7 @@ import AddProblem from "./pages/AddProblem";
 import TestPage from "./pages/TestPage";
 import Progress from "./pages/Progress";
 import ProtectedRoute from "./routes/ProtectedRoutes";
+import MainLayout from "./layout/MainLayout";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <MainLayout children={<Dashboard />} isDashboard={true} />
             </ProtectedRoute>
           }
         />
@@ -30,7 +31,7 @@ function App() {
           path="/invite"
           element={
             <ProtectedRoute>
-              <InviteCandidate />
+              <MainLayout children={<InviteCandidate />} isDashboard={false} />
             </ProtectedRoute>
           }
         />
@@ -39,7 +40,7 @@ function App() {
           path="/problems/add"
           element={
             <ProtectedRoute>
-              <AddProblem />
+              <MainLayout children={<AddProblem />} isDashboard={false} />
             </ProtectedRoute>
           }
         />
@@ -52,7 +53,7 @@ function App() {
           path="/progress"
           element={
             <ProtectedRoute>
-              <Progress />
+              <MainLayout children={<Progress />} isDashboard={false} />
             </ProtectedRoute>
           }
         />
