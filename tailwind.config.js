@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -19,14 +20,24 @@ export default {
           700: '#4338ca',
         },
       },
-      animation: {
-        'fade-in': 'fadeIn 0.4s ease-out',
+      app: {
+        light: "#ffffff",
+        dark: "#0f172a",   // slate-900
       },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(12px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
+      card: {
+        light: "#ffffff",
+        dark: "#111827",   // gray-900
+      },
+      borderLight: "#e5e7eb",
+      borderDark: "#1f2937",
+    },
+    animation: {
+      'fade-in': 'fadeIn 0.4s ease-out',
+    },
+    keyframes: {
+      fadeIn: {
+        '0%': { opacity: '0', transform: 'translateY(12px)' },
+        '100%': { opacity: '1', transform: 'translateY(0)' },
       },
     },
   },

@@ -246,16 +246,16 @@ export default function InviteCandidate() {
         <h1 className="text-3xl font-bold">
           Invite Candidates
         </h1>
-        <div className="flex bg-gray-900 border border-gray-800 rounded-lg p-1">
+        <div className="flex bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-1">
           <button
             onClick={() => setInviteMode("single")}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${inviteMode === "single" ? "bg-indigo-600 text-white" : "text-gray-400 hover:text-white"}`}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${inviteMode === "single" ? "bg-indigo-600 text-white" : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"}`}
           >
             Single Invite
           </button>
           <button
             onClick={() => setInviteMode("bulk")}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${inviteMode === "bulk" ? "bg-indigo-600 text-white" : "text-gray-400 hover:text-white"}`}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${inviteMode === "bulk" ? "bg-indigo-600 text-white" : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"}`}
           >
             Bulk Invite
           </button>
@@ -264,8 +264,8 @@ export default function InviteCandidate() {
 
       {/* Input Section */}
       {inviteMode === "single" ? (
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-8">
-          <label className="block text-sm text-gray-400 mb-2">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-8 hover:shadow-sm transition-all text-gray-900 dark:text-white">
+          <label className="block text-sm text-gray-500 dark:text-gray-400 mb-2">
             Candidate Email
           </label>
           <input
@@ -273,13 +273,13 @@ export default function InviteCandidate() {
             placeholder="candidate@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500 text-gray-900 dark:text-white"
           />
         </div>
       ) : (
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-8">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-8 hover:shadow-sm transition-all text-gray-900 dark:text-white">
           <div className="flex justify-between items-center mb-4">
-            <label className="block text-sm text-gray-400">
+            <label className="block text-sm text-gray-500 dark:text-gray-400">
               Upload Candidates CSV
             </label>
             <button
@@ -385,8 +385,8 @@ export default function InviteCandidate() {
       )}
 
       {/* Filters */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-8">
-        <h2 className="text-lg font-semibold mb-4">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-8 shadow-sm">
+        <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
           Filter Problems
         </h2>
 
@@ -396,7 +396,7 @@ export default function InviteCandidate() {
           <select
             value={difficulty}
             onChange={(e) => setDifficulty(e.target.value)}
-            className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500"
+            className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500"
           >
             <option value="">All Difficulty</option>
             <option value="easy">Easy</option>
@@ -410,7 +410,7 @@ export default function InviteCandidate() {
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
               placeholder="Enter tag"
-              className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500"
+              className="flex-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500"
             />
             <button
               onClick={addTag}
@@ -444,9 +444,9 @@ export default function InviteCandidate() {
       </div>
 
       {/* Problems Section */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-8">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-8 shadow-sm text-gray-900 dark:text-white">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
             Select Problems
           </h2>
           <span className="text-sm text-indigo-400 font-medium">
@@ -462,10 +462,10 @@ export default function InviteCandidate() {
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto rounded-xl border border-gray-800">
+            <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800">
               <table className="w-full text-left border-collapse">
-                <thead className="bg-gray-800">
-                  <tr className="text-gray-300 border-b border-gray-700 text-sm">
+                <thead className="bg-gray-100 dark:bg-gray-800">
+                  <tr className="text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 text-sm">
                     <th className="px-4 py-3 font-medium w-12">Select</th>
                     <th className="px-4 py-3 font-medium">Title</th>
                     <th className="px-4 py-3 font-medium">Difficulty</th>
@@ -480,15 +480,15 @@ export default function InviteCandidate() {
                       <tr
                         key={problem._id}
                         onClick={() => handleSelectProblem(problem._id)}
-                        className={`cursor-pointer border-b border-gray-800 transition-colors ${isSelected ? "bg-indigo-600/10" : "hover:bg-gray-800/50"
-                          } last:border-0`}
+                        className={`cursor-pointer border-b border-gray-100 dark:border-gray-800 transition-colors ${isSelected ? "bg-indigo-600/10" : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                          } last:border-0 text-gray-900 dark:text-white`}
                       >
                         <td className="px-4 py-4">
                           <div
                             className={`w-5 h-5 rounded border flex flex-shrink-0 items-center justify-center
                                 ${isSelected
                                 ? "bg-indigo-600 border-indigo-600"
-                                : "border-gray-600 bg-gray-900"
+                                : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900"
                               }`}
                           >
                             {isSelected && (
@@ -509,7 +509,7 @@ export default function InviteCandidate() {
                           </div>
                         </td>
                         <td className="px-4 py-4">
-                          <div className="font-semibold text-white">{problem.title}</div>
+                          <div className="font-semibold text-gray-900 dark:text-white">{problem.title}</div>
                         </td>
                         <td className="px-4 py-4">
                           <span
@@ -552,14 +552,14 @@ export default function InviteCandidate() {
                   <button
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-700 rounded-lg transition-colors font-medium"
+                    className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg transition-colors font-medium"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => setCurrentPage(p => Math.min(Math.ceil(problems.length / rowsPerPage), p + 1))}
                     disabled={currentPage === Math.ceil(problems.length / rowsPerPage)}
-                    className="px-4 py-2 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-700 rounded-lg transition-colors font-medium"
+                    className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg transition-colors font-medium"
                   >
                     Next
                   </button>
@@ -571,8 +571,8 @@ export default function InviteCandidate() {
       </div>
 
       {/* Time Limit Section */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-8">
-        <label className="block text-sm text-gray-400 mb-2">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-8 shadow-sm">
+        <label className="block text-sm text-gray-500 dark:text-gray-400 mb-2">
           Test Duration (Minutes)
         </label>
         <input
@@ -580,7 +580,7 @@ export default function InviteCandidate() {
           min="1"
           value={durationMinutes}
           onChange={(e) => setDurationMinutes(e.target.value)}
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500"
+          className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500"
         />
       </div>
 

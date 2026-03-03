@@ -1,71 +1,128 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Navbar({ children, isDashboard }) {
-
     const navigate = useNavigate();
+    const [theme, setTheme] = useState("dark");
+
+    // Load saved theme
+    useEffect(() => {
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        setTheme(savedTheme);
+        document.documentElement.classList.toggle("dark", savedTheme === "dark");
+    }, []);
+
+    const toggleTheme = () => {
+        const newTheme = theme === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+        localStorage.setItem("theme", newTheme);
+        document.documentElement.classList.toggle("dark", newTheme === "dark");
+    };
 
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("adminName");
         navigate("/login");
-    }
+    };
 
     return (
-        <div className="min-h-screen bg-gray-950 text-gray-100">
-            <nav className="border-b border-gray-800 bg-gray-900/60 backdrop-blur-sm sticky top-0 z-20">
-                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
-                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+
+            {/* NAVBAR */}
+            <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/70 backdrop-blur-md sticky top-0 z-20 transition-colors duration-300">
+                <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+
+                    {/* Logo */}
+                    <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/dashboard")}>
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-500 to-brand-700 flex items-center justify-center shadow-md">
+
+                            {/* Clean Code SVG Logo */}
+                            <svg
+                                className="w-5 h-5 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 16l-4-4 4-4M16 8l4 4-4 4" />
                             </svg>
                         </div>
-                        <span className="text-base font-bold tracking-tight">CodeJudge</span>
+                        <span className="text-lg font-semibold tracking-tight">
+                            CodeJudge
+                        </span>
                     </div>
-                    {
-                        isDashboard ?
-                            <button
-                                type="button"
-                                onClick={handleLogout}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 border border-transparent hover:border-gray-700 transition-all duration-200"
-                            >
+
+                    <div className="flex items-center gap-3">
+
+                        {/* Theme Toggle Button */}
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-200"
+                        >
+                            {theme === "dark" ? (
+                                // Sun Icon (for light mode switch)
                                 <svg
-                                    className="w-4 h-4"
+                                    className="w-5 h-5 text-yellow-400"
                                     fill="none"
                                     stroke="currentColor"
+                                    strokeWidth="2"
                                     viewBox="0 0 24 24"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M17 16l4-4m0 0l-4-4m4 4H7"
-                                    />
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M3 5a2 2 0 012-2h6a2 2 0 012 2v3m0 8v3a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"
+                                    <circle cx="12" cy="12" r="5" />
+                                    <path strokeLinecap="round" strokeLinejoin="round"
+                                        d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
                                     />
                                 </svg>
+                            ) : (
+                                // Moon Icon (for dark mode switch)
+                                <svg
+                                    className="w-5 h-5 text-indigo-500"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round"
+                                        d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+                                    />
+                                </svg>
+                            )}
+                        </button>
+
+                        {/* Dashboard / Back / Logout */}
+                        {isDashboard ? (
+                            <button
+                                onClick={handleLogout}
+                                className="px-4 py-2 rounded-lg text-sm font-medium
+                                text-gray-600 dark:text-gray-300
+                                hover:text-black dark:hover:text-white
+                                hover:bg-gray-200 dark:hover:bg-gray-800
+                                transition-all duration-200"
+                            >
                                 Logout
                             </button>
-                            : <button
-                                type="button"
+                        ) : (
+                            <button
                                 onClick={() => navigate("/dashboard")}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 border border-transparent hover:border-gray-700 transition-all duration-200"
+                                className="px-4 py-2 rounded-lg text-sm font-medium
+                                text-gray-600 dark:text-gray-300
+                                hover:text-black dark:hover:text-white
+                                hover:bg-gray-200 dark:hover:bg-gray-800
+                                transition-all duration-200"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                                </svg>
                                 Back
                             </button>
-                    }
+                        )}
+                    </div>
                 </div>
             </nav>
-            {children}
+
+            {/* PAGE CONTENT */}
+            <main className="max-w-6xl mx-auto px-6 py-8 transition-colors duration-300">
+                {children}
+            </main>
         </div>
-    )
+    );
 }
 
-export default Navbar
+export default Navbar;

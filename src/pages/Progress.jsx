@@ -112,10 +112,10 @@ export default function Progress() {
                         placeholder="Search by email..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-gray-900 border border-gray-800 
-      text-white rounded-xl px-4 py-3 pl-11
+                        className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 
+      text-gray-900 dark:text-white rounded-xl px-4 py-3 pl-11
       focus:outline-none focus:ring-2 focus:ring-indigo-500
-      focus:border-indigo-500 transition-all duration-200"
+      focus:border-indigo-500 transition-all duration-200 shadow-sm"
                     />
 
                     <svg
@@ -137,7 +137,7 @@ export default function Progress() {
             {/* candidate list */}
             {candidates.length > 0 && (
                 <div className="mb-10">
-                    <h2 className="text-2xl font-semibold text-white mb-6">
+                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
                         Candidates
                     </h2>
 
@@ -150,7 +150,7 @@ export default function Progress() {
                             <select
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
-                                className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
+                                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white rounded px-3 py-2"
                             >
                                 <option value="all">All</option>
                                 <option value="accepted">Accepted</option>
@@ -164,7 +164,7 @@ export default function Progress() {
                             <select
                                 value={resultFilter}
                                 onChange={(e) => setResultFilter(e.target.value)}
-                                className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
+                                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white rounded px-3 py-2"
                             >
                                 <option value="all">All</option>
                                 <option value="passed">Passed</option>
@@ -178,7 +178,7 @@ export default function Progress() {
                             <select
                                 value={scoreSort}
                                 onChange={(e) => setScoreSort(e.target.value)}
-                                className="bg-gray-900 border border-gray-800 text-white rounded px-3 py-2"
+                                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white rounded px-3 py-2"
                             >
                                 <option value="none">None</option>
                                 <option value="desc">Highest first</option>
@@ -190,7 +190,7 @@ export default function Progress() {
                     <div className="overflow-x-auto">
                         <table className="w-full table-auto text-left">
                             <thead>
-                                <tr className="text-gray-400 border-b border-gray-700">
+                                <tr className="text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
                                     <th className="px-4 py-2">Email</th>
                                     <th className="px-4 py-2">Status</th>
                                     <th className="px-4 py-2">Attempts</th>
@@ -203,7 +203,7 @@ export default function Progress() {
                                     <tr
                                         key={c.id}
                                         onClick={() => handleCandidateClick(c.token)}
-                                        className="cursor-pointer hover:bg-gray-800"
+                                        className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-100 dark:border-gray-800 last:border-0 text-gray-900 dark:text-white"
                                     >
                                         <td className="px-4 py-3">{c.email}</td>
                                         <td className="px-4 py-3 capitalize">
@@ -242,14 +242,14 @@ export default function Progress() {
                             <button
                                 onClick={handlePrev}
                                 disabled={currentPage === 1}
-                                className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 disabled:opacity-50"
+                                className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 disabled:opacity-50 text-gray-900 dark:text-white"
                             >
                                 &larr; Prev
                             </button>
                             <button
                                 onClick={handleNext}
                                 disabled={currentPage === pageCount || pageCount === 0}
-                                className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 disabled:opacity-50"
+                                className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 disabled:opacity-50 text-gray-900 dark:text-white"
                             >
                                 Next &rarr;
                             </button>

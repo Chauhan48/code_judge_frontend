@@ -19,8 +19,8 @@ export default function AttemptStatusChart({ candidates }) {
   const COLORS = ["#6366F1", "#EF4444"]; // Indigo & Red
 
   return (
-    <div className="w-full max-w-xl mx-auto bg-gray-900 p-8 rounded-2xl shadow-xl">
-      <h2 className="text-2xl font-semibold text-white text-center mb-6">
+    <div className="w-full max-w-xl mx-auto bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-2xl shadow-sm dark:shadow-xl">
+      <h2 className="text-2xl font-semibold text-gray-900 dark:text-white text-center mb-6">
         Test Attempt Status
       </h2>
 

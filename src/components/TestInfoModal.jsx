@@ -5,9 +5,9 @@ export default function TestInfoModal({ progress, onClose }) {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-gray-900 text-white rounded-lg max-w-xl w-full p-6 relative">
+            <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-lg max-w-xl w-full p-6 relative shadow-xl">
                 <button
-                    className="absolute top-2 right-2 text-gray-400 hover:text-white"
+                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
                     onClick={onClose}
                 >
                     ×
@@ -28,7 +28,7 @@ export default function TestInfoModal({ progress, onClose }) {
                         {progress.problems.map((prob) => (
                             <div
                                 key={prob.problemId}
-                                className="bg-gray-800 border border-gray-700 p-4 rounded"
+                                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg"
                             >
                                 <h4 className="font-semibold mb-1">{prob.title}</h4>
                                 <p>
@@ -45,7 +45,7 @@ export default function TestInfoModal({ progress, onClose }) {
                                 </p>
 
                                 {prob.lastAttempt && (
-                                    <div className="mt-3 bg-gray-700 p-3 rounded">
+                                    <div className="mt-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-3 rounded shadow-sm dark:shadow-none">
                                         <h5 className="font-semibold">Last Attempt</h5>
                                         <p>
                                             <span className="font-medium">Status:</span>{" "}

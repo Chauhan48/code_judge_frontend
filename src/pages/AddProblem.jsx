@@ -54,7 +54,7 @@ function TestCaseBlock({ label, cases, onChange, onAdd, onRemove }) {
                 {cases.map((tc, i) => (
                     <div
                         key={i}
-                        className="bg-gray-800/60 border border-gray-700 rounded-xl p-4 relative group"
+                        className="bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-xl p-4 relative group text-gray-900 dark:text-white"
                     >
                         <span className="absolute top-3 left-4 text-xs font-mono text-gray-600">
                             #{i + 1}
@@ -247,14 +247,14 @@ export default function AddProblem() {
 
     // ─── render ────────────────────────────────────────────────────────────────
     return (
-        <div className="min-h-screen bg-gray-950 text-gray-100">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-colors duration-300">
 
             {/* Page header */}
             <div className="max-w-5xl mx-auto px-6 pt-12 pb-6">
                 <span className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 rounded-full px-3 py-1">
                     ＋ New Problem
                 </span>
-                <h1 className="text-3xl font-bold text-white mt-3 mb-1">Add Problem</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-3 mb-1">Add Problem</h1>
                 <p className="text-gray-400 text-sm">
                     Fill in the details below. Fields marked <span className="text-red-400">*</span> are required.
                 </p>
@@ -262,7 +262,8 @@ export default function AddProblem() {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="max-w-5xl mx-auto px-6 pb-20">
-                <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 space-y-6 animate-fade-in">
+                <div className="bg-white dark:bg-gray-900
+border border-gray-200 dark:border-gray-800 rounded-2xl p-8 space-y-6 animate-fade-in shadow-sm">
 
                     {/* ── Basic Info ──────────────────────────────────────── */}
                     <SectionTitle>Basic Info</SectionTitle>
@@ -402,7 +403,7 @@ export default function AddProblem() {
                     </div>
 
                     {/* ── Test Cases ──────────────────────────────────────── */}
-                    <div className="border-t border-gray-800 pt-6">
+                    <div className="border-t border-gray-200 dark:border-gray-800 pt-6">
                         <TestCaseBlock
                             label="Public Test Cases"
                             cases={form.publicTestCases}
@@ -412,7 +413,7 @@ export default function AddProblem() {
                         />
                     </div>
 
-                    <div className="border-t border-gray-800 pt-6">
+                    <div className="border-t border-gray-200 dark:border-gray-800 pt-6">
                         <TestCaseBlock
                             label="Hidden Test Cases"
                             cases={form.hiddenTestCases}
@@ -423,7 +424,7 @@ export default function AddProblem() {
                     </div>
 
                     {/* ── Submit ──────────────────────────────────────────── */}
-                    <div className="border-t border-gray-800 pt-6 flex gap-3">
+                    <div className="border-t border-gray-200 dark:border-gray-800 pt-6 flex gap-3">
                         {/* use a submit button instead of manually attaching onClick. this
                             ensures the form's onSubmit handler runs every time (including
                             when the user presses Enter) and avoids subtle issues where the
